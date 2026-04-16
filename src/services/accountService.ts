@@ -109,3 +109,18 @@ export const withdrawService = async (accountId: number, value: number) => {
 
   return { accountId: updatedAccount.accountId, balance: updatedAccount.balance };
 };
+
+export const blockAccountService = async (accountId: number) => {
+  const account = await prisma.account.findUnique({
+    where: { accountId },
+  });
+
+  if (!account) return { error: 'Account not found', status: 404 };
+
+  await prisma.account.update({
+    where: { accountId },
+    data: { activeFlag: false },
+  });
+
+  return { message: 'Account blocked successfully' };
+};

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createAccountService, getAccountBalanceService, depositService, withdrawService } from '../services/accountService';
+import { createAccountService, getAccountBalanceService, depositService, withdrawService, blockAccountService } from '../services/accountService';
 
 export const createAccount = async (req: Request, res: Response) => {
   // Destructure the fields we expect from the request body
@@ -58,6 +58,19 @@ export const withdraw = async (req: Request, res: Response) => {
   }
 
   const result = await withdrawService(accountId, value);
+
+  if ('error' in result) {
+    res.status(result.status as number).json({ error: result.error });
+    return;
+  }
+
+  res.status(200).json(result);
+};
+
+export const blockAccount = async (req: Request, res: Response) => {
+  const accountId = parseInt(req.params.id as string);
+
+  const result = await blockAccountService(accountId);
 
   if ('error' in result) {
     res.status(result.status as number).json({ error: result.error });
