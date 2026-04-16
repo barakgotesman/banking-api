@@ -21,3 +21,13 @@ export const createAccountService = async (data: CreateAccountInput) => {
 
   return account;
 };
+
+export const getAccountBalanceService = async (accountId: number) => {
+  // findUnique finds exactly one record by a unique field (primary key here)
+  // returns null if no record matches
+  const account = await prisma.account.findUnique({
+    where: { accountId },
+  });
+
+  return account;
+};
