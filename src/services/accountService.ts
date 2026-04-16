@@ -31,3 +31,28 @@ export const getAccountBalanceService = async (accountId: number) => {
 
   return account;
 };
+
+export const depositService = async (accountId: number, value: number) => {
+  const account = await prisma.account.findUnique({
+    where: { accountId },
+  });
+
+  if (!account) return { error: 'Account not found', status: 404 };
+  if (!account.activeFlag) return { error: 'Account is blocked', status: 403 };
+
+  // Update the balance and create a transaction record in a single atomic operation
+  const updatedAccount = await prisma.$transaction(async (tx) => {
+    const updated = await tx.account.update({
+      where: { accountId },
+      data: { balance: account.balance + value },
+    });
+
+    await tx.transaction.create({
+      data: { accountId, value },
+    });
+
+    return updated;
+  });
+
+  return { accountId: updatedAccount.accountId, balance: updatedAccount.balance };
+};
