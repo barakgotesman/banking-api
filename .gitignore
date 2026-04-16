@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Compiled output
+dist/
+
+# Database files
+*.db
+*.db-journal
+
+# Environment variables
+.env
+
+# Prisma generated client
+prisma/generated/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Assignment files
+*.pdf
+*.docx
+
+# Claude context
+CLAUDE.md
+.claude/

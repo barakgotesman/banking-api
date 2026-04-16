@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Person {
+  personId  Int       @id @default(autoincrement())
+  name      String
+  document  String
+  birthDate DateTime
+  accounts  Account[]
+}
+
+model Account {
+  accountId            Int           @id @default(autoincrement())
+  personId             Int
+  balance              Float
+  dailyWithdrawalLimit Float
+  activeFlag           Boolean       @default(true)
+  accountType          Int
+  createDate           DateTime      @default(now())
+  person               Person        @relation(fields: [personId], references: [personId])
+  transactions         Transaction[]
+}
+
+model Transaction {
+  transactionId   Int      @id @default(autoincrement())
+  accountId       Int
+  value           Float
+  transactionDate DateTime @default(now())
+  account         Account  @relation(fields: [accountId], references: [accountId])
+}
