@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createAccountService, getAccountBalanceService, depositService, withdrawService, blockAccountService } from '../services/accountService';
+import { createAccountService, getAccountBalanceService, depositService, withdrawService, blockAccountService, getTransactionsService } from '../services/accountService';
 
 export const createAccount = async (req: Request, res: Response) => {
   // Destructure the fields we expect from the request body
@@ -71,6 +71,37 @@ export const blockAccount = async (req: Request, res: Response) => {
   const accountId = parseInt(req.params.id as string);
 
   const result = await blockAccountService(accountId);
+
+  if ('error' in result) {
+    res.status(result.status as number).json({ error: result.error });
+    return;
+  }
+
+  res.status(200).json(result);
+};
+
+export const getTransactions = async (req: Request, res: Response) => {
+  const accountId = parseInt(req.params.id as string);
+
+  // Query params come as strings, so we convert them to Date objects if provided
+  const from = req.query.from ? new Date(req.query.from as string) : undefined;
+  const to = req.query.to ? new Date(req.query.to as string) : undefined;
+
+  // isNaN on a Date object checks if it's a valid date
+  if (from && isNaN(from.getTime())) {
+    res.status(400).json({ error: 'Invalid from date' });
+    return;
+  }
+  if (to && isNaN(to.getTime())) {
+    res.status(400).json({ error: 'Invalid to date' });
+    return;
+  }
+  if (from && to && from > to) {
+    res.status(400).json({ error: 'from date must be before to date' });
+    return;
+  }
+
+  const result = await getTransactionsService(accountId, from, to);
 
   if ('error' in result) {
     res.status(result.status as number).json({ error: result.error });

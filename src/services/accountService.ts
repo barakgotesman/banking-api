@@ -110,6 +110,30 @@ export const withdrawService = async (accountId: number, value: number) => {
   return { accountId: updatedAccount.accountId, balance: updatedAccount.balance };
 };
 
+export const getTransactionsService = async (accountId: number, from?: Date, to?: Date) => {
+  const account = await prisma.account.findUnique({
+    where: { accountId },
+  });
+
+  if (!account) return { error: 'Account not found', status: 404 };
+
+  // Build the date filter only if from/to were provided
+  const dateFilter: { gte?: Date; lte?: Date } = {};
+  if (from) dateFilter.gte = from;
+  if (to) dateFilter.lte = to;
+
+  const transactions = await prisma.transaction.findMany({
+    where: {
+      accountId,
+      // Only apply transactionDate filter if at least one date was provided
+      ...(Object.keys(dateFilter).length > 0 && { transactionDate: dateFilter }),
+    },
+    orderBy: { transactionDate: 'asc' },
+  });
+
+  return transactions;
+};
+
 export const blockAccountService = async (accountId: number) => {
   const account = await prisma.account.findUnique({
     where: { accountId },
