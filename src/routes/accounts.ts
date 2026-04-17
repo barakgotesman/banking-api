@@ -26,6 +26,8 @@ const router = Router();
  *     responses:
  *       201:
  *         description: Account created successfully
+ *       500:
+ *         description: Internal server error
  */
 router.post('/', createAccount);
 
@@ -45,6 +47,8 @@ router.post('/', createAccount);
  *         description: Account balance
  *       404:
  *         description: Account not found
+ *       500:
+ *         description: Internal server error
  */
 router.get('/:id/balance', getAccountBalance);
 
@@ -77,6 +81,8 @@ router.get('/:id/balance', getAccountBalance);
  *         description: Account is blocked
  *       404:
  *         description: Account not found
+ *       500:
+ *         description: Internal server error
  */
 router.post('/:id/deposit', deposit);
 
@@ -109,6 +115,8 @@ router.post('/:id/deposit', deposit);
  *         description: Account is blocked
  *       404:
  *         description: Account not found
+ *       500:
+ *         description: Internal server error
  */
 router.post('/:id/withdraw', withdraw);
 
@@ -128,6 +136,8 @@ router.post('/:id/withdraw', withdraw);
  *         description: Account blocked successfully
  *       404:
  *         description: Account not found
+ *       500:
+ *         description: Internal server error
  */
 router.patch('/:id/block', blockAccount);
 
@@ -163,6 +173,8 @@ router.patch('/:id/block', blockAccount);
  *         description: Invalid date format or range
  *       404:
  *         description: Account not found
+ *       500:
+ *         description: Internal server error
  */
 router.get('/:id/transactions', getTransactions);
 
