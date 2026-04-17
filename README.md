@@ -67,7 +67,6 @@ banking-api/
 │   ├── account.test.ts         # Jest tests (16 tests across all endpoints)
 │   └── setup.ts                # Sets DATABASE_URL to test.db before tests run
 ├── .env                        # DATABASE_URL for development
-├── .env.test                   # DATABASE_URL for testing
 ├── package.json
 └── tsconfig.json
 ```
