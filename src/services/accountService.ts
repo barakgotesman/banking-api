@@ -1,6 +1,15 @@
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+// PrismaClient is instantiated lazily so that DATABASE_URL can be set
+// by the test setup file before the client connects to the database
+let _prisma: PrismaClient | null = null;
+const getPrisma = () => {
+  if (!_prisma) _prisma = new PrismaClient();
+  return _prisma;
+};
+const prisma = new Proxy({} as PrismaClient, {
+  get: (_target, prop) => (getPrisma() as any)[prop],
+});
 
 interface CreateAccountInput {
   personId: number;
