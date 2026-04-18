@@ -66,7 +66,8 @@ banking-api/
 ├── tests/
 │   ├── account.test.ts         # Jest tests (16 tests across all endpoints)
 │   └── setup.ts                # Sets DATABASE_URL to test.db before tests run
-├── .env                        # DATABASE_URL for development
+├── .env                        # DATABASE_URL for development (not committed)
+├── .env.example                # Environment variable template (committed)
 ├── package.json
 └── tsconfig.json
 ```
@@ -96,14 +97,20 @@ Full interactive documentation available at `http://localhost:3000/api-docs` aft
 npm install
 ```
 
-### 2. Set up the database
+### 2. Set up environment variables
+
+```bash
+cp .env.example .env
+```
+
+### 3. Set up the database
 
 ```bash
 npx prisma migrate deploy
 npx prisma db seed
 ```
 
-### 3. Start the server
+### 4. Start the server
 
 ```bash
 npm start
